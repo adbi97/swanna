@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: ap-southeast-2  # Update this as needed
-      BUCKET_NAME: main-swanna-bronze  # Update with your S3 bucket name
+      AWS_REGION: ap-southeast-2  # Set AWS region
+      BUCKET_NAME: main-swanna-bronze  # S3 bucket name
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
     - name: Checkout code
@@ -50,15 +52,9 @@ jobs:
       run: terraform -chdir=infrastructure apply -auto-approve
 
     - name: Upload Lambda Package to S3
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws s3 cp application/lambda_function.zip s3://${{ env.BUCKET_NAME }}/lambda_function.zip
 
     - name: Deploy Lambda Function
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AW_SECRET_ACCESS_KEY }}
       run: |
         aws lambda update-function-code --function-name AlphaVantageIngestion --s3-bucket ${{ env.BUCKET_NAME }} --s3-key lambda_function.zip --region ${{ env.AWS_REGION }}
