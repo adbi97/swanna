@@ -23,14 +23,15 @@ jobs:
         python-version: '3.9'
 
     - name: Install dependencies
+      working-directory: application
       run: |
-        pip install -r application/requirements.txt
-
+        pip install -r requirements.txt -t .
+    
     - name: Zip Lambda function
       run: |
         cd application
-        zip -r ../lambda_package/lambda_function.zip . -x "*.git*" "*.github*"
-    
+        zip -r ../lambda_package/lambda_function.zip aapl_ingestion.py *
+
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
       with:
