@@ -31,6 +31,10 @@ jobs:
         cp application/aapl_ingestion.py package/
         cd package
         zip -r ../lambda_function.zip .
+        ls -l
+        cd ..
+        ls -l
+        cd ..
       
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
