@@ -34,8 +34,8 @@ resource "aws_s3_bucket" "gold_bucket" {
   }
 }
 
-resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = "lambda_bucket"
+resource "aws_s3_bucket" "lambda-bucket" {
+  bucket = "lambda-bucket"
 
   tags = {
     Name        = "Lambda Artifacts"
@@ -53,7 +53,7 @@ data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
 }
 
 resource "aws_lambda_function" "aapl_ingestion" {
-  s3_bucket        = "lambda_bucket"  
+  s3_bucket        = "lambda-bucket"  
   s3_key           = "lambda_function.zip"  
   function_name    = "AlphaVantageIngestion"
   role             = aws_iam_role.lambda_execution_role.arn
