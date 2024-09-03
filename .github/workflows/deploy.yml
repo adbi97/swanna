@@ -59,7 +59,7 @@ jobs:
 
     - name: Upload Lambda Package to S3
       run: |
-        aws s3 cp lambda_function.zip s3://${{ env.BUCKET_NAME }}/lambda_function.zip
+        aws s3 cp application/lambda_function.zip s3://${{ env.BUCKET_NAME }}/lambda_function.zip
 
     - name: Deploy Lambda Function
       run: |
