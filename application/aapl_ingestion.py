@@ -20,7 +20,7 @@ def get_secret(secret_name):
 def lambda_handler(event, context):
     # Retrieve API key from Secrets Manager
     secrets = get_secret('AlphaVantageAPI_Key')
-    api_key = secrets['api_key']  # Adjust according to your secret structure
+    api_key = secrets['AlphaVantageAPI_Key']  
     symbol = 'AAPL'
     function = 'TIME_SERIES_DAILY'
     
