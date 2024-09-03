@@ -45,11 +45,17 @@ jobs:
       run: terraform -chdir=infrastructure validate
 
     - name: Terraform Plan
-      run: terraform -chdir=infrastructure plan
+      run: |
+        terraform -chdir=infrastructure plan \
+          -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      run: terraform -chdir=infrastructure apply -auto-approve
+      run: |
+        terraform -chdir=infrastructure apply -auto-approve \
+          -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
     - name: Upload Lambda Package to S3
       run: |
