@@ -30,7 +30,7 @@ jobs:
         pip install -r application/requirements.txt -t package/
         cp application/aapl_ingestion.py package/
         cd package
-        zip -r ../lambda_function.zip .
+        zip -r ../application/lambda_function.zip .
 
       
     - name: Set up Terraform
