@@ -61,7 +61,7 @@ resource "aws_lambda_function" "aapl_ingestion" {
   runtime          = "python3.9"
   timeout          = 30  # Optional: Adjust the timeout as needed
 
-  source_code_hash = filebase64sha256(file("${path.module}/../application/lambda_function.zip"))
+  source_code_hash = filebase64sha256("${path.module}/../application/lambda_function.zip")
 
   environment {
     variables = {
