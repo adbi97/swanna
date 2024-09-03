@@ -42,13 +42,14 @@ data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
 }
 
 resource "aws_lambda_function" "aapl_ingestion" {
-  filename         = "lambda_function.zip"
+  filename         = "${path.module}/../application/lambda_package/lambda_function.zip" # Updated path to lambda_function.zip
   function_name    = "AlphaVantageIngestion"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "aapl_ingestion.lambda_handler"
   runtime          = "python3.9"
+  timeout          = 30 # Optional: Adjust the timeout as needed
 
-  source_code_hash = filebase64sha256("lambda_function.zip")
+  source_code_hash = filebase64sha256("${path.module}/../application/lambda_package/lambda_function.zip") # Updated path to lambda_function.zip
 
   environment {
     variables = {

@@ -34,7 +34,7 @@ resource "aws_iam_role_policy" "lambda_secrets_policy" {
       {
         Effect = "Allow",
         Action = [
-          "secretsmanager:GetSecretValu"
+          "secretsmanager:GetSecretValue"
         ],
         Resource = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:AlphaVantageAPI_Key-*"
       }
