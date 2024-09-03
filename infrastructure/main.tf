@@ -34,6 +34,15 @@ resource "aws_s3_bucket" "gold_bucket" {
   }
 }
 
+resource "aws_s3_bucket" "lambda_bucket" {
+  bucket = "lambda_bucket"
+
+  tags = {
+    Name        = "Lambda Artifacts"
+    Environment = "Development"
+  }
+}
+
 # Secrets Manager
 data "aws_secretsmanager_secret" "alpha_vantage_secret" {
   name = "AlphaVantageAPI_Key"
@@ -44,14 +53,15 @@ data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
 }
 
 resource "aws_lambda_function" "aapl_ingestion" {
-  filename         = "${path.module}/../application/lambda_function.zip" 
+  s3_bucket        = "lambda_bucket"  
+  s3_key           = "lambda_function.zip"  
   function_name    = "AlphaVantageIngestion"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "aapl_ingestion.lambda_handler"
   runtime          = "python3.9"
-  timeout          = 30 # Optional: Adjust the timeout as needed
+  timeout          = 30  # Optional: Adjust the timeout as needed
 
-  source_code_hash = filebase64sha256("${path.module}/../application/lambda_function.zip")
+  source_code_hash = filebase64sha256(file("${path.module}/../application/lambda_function.zip"))
 
   environment {
     variables = {
@@ -59,3 +69,4 @@ resource "aws_lambda_function" "aapl_ingestion" {
     }
   }
 }
+
