@@ -1,0 +1,19 @@
+name: Print Environment Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  print-env:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Print Environment Variables
+      run: |
+        echo "TERRAFORM_STATE_BUCKET=${{ env.TERRAFORM_STATE_BUCKET }}"
+        echo "AWS_REGION=${{ env.AWS_REGION }}"
+        echo "DYNAMODB_TABLE_NAME=${{ env.DYNAMODB_TABLE_NAME }}"
+        echo "BUCKET_NAME=${{ env.BUCKET_NAME }}"
