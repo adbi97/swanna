@@ -1,0 +1,33 @@
+name: Terraform Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Specify the environment to refresh'
+        required: true
+        default: 'development'
+        type: string
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7  # Specify the Terraform version you want to use
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Refresh
+        run: terraform refresh
+
+      - name: Display Terraform state
+        run: terraform state list
+

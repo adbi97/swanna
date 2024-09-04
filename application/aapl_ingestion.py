@@ -9,7 +9,7 @@ secrets_client = boto3.client('secretsmanager')
 s3 = boto3.client('s3')
 
 # Initialise Variables
-bucket_name = os.getenv('BUCKET_NAME', 'swanna-bronze')  # Provide a default value if needed
+bucket_name = os.getenv('BUCKET_NAME')  # Provide a default value if needed
 
 
 def get_secret(secret_name):
