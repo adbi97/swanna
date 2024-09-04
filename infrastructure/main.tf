@@ -6,6 +6,17 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# Terraform Backend
+
+terraform {
+  backend "s3" {
+    bucket         = var.terraform_state_bucket
+    key            = "terraform/terraform.tfstate"
+    region         = var.aws_region
+    dynamodb_table = "terraform-lock"  
+  }
+}
+
 # S3 Buckets
 resource "aws_s3_bucket" "bronze_bucket" {
   bucket = "${var.bucket_prefix}-bronze"
