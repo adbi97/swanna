@@ -33,11 +33,11 @@ jobs:
 
     - name: Terraform Init
       run: terraform -chdir=infrastructure init \
-            -backend-config="bucket=${{ env.TERRAFORM_STATE_BUCKET }}" \
-            -backend-config="key=terraform.tfstate" \
-            -backend-config="region=${{ env.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ env.DYNAMODB_TABLE_NAME }}" \
-            -backend-config="encrypt=true"
+        -backend-config="bucket=${{ env.TERRAFORM_STATE_BUCKET }}" \
+        -backend-config="key=terraform.tfstate" \
+        -backend-config="region=${{ env.AWS_REGION }}" \
+        -backend-config="dynamodb_table=${{ env.DYNAMODB_TABLE_NAME }}" \
+        -backend-config="encrypt=true"
 
     - name: Terraform Validate
       run: terraform -chdir=infrastructure validate
