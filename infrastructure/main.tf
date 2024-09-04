@@ -53,9 +53,9 @@ data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
 }
 
 resource "aws_lambda_function" "aapl_ingestion" {
-  s3_bucket        = "lambda-bucket"  
+  s3_bucket        = "${var.bucket_prefix}-lambda-bucket"
   s3_key           = "lambda_function.zip"  
-  function_name    = "AlphaVantageIngestion"
+  function_name    = "AlphaVantageIngestion_AAPL"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "aapl_ingestion.lambda_handler"
   runtime          = "python3.9"
