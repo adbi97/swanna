@@ -1,3 +1,4 @@
+import os
 import json
 import boto3
 import requests
@@ -6,6 +7,10 @@ from datetime import datetime
 # Initialize AWS clients
 secrets_client = boto3.client('secretsmanager')
 s3 = boto3.client('s3')
+
+# Initialise Variables
+bucket_name = os.getenv('BUCKET_NAME', 'swanna-bronze')  # Provide a default value if needed
+
 
 def get_secret(secret_name):
     try:
@@ -31,7 +36,7 @@ def lambda_handler(event, context):
     # Save to S3
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     filename = f'{symbol}_{timestamp}.json'
-    s3.put_object(Bucket='your-project-bronze', Key=filename, Body=json.dumps(data))
+    s3.put_object(Bucket=bucket_name, Key=filename, Body=json.dumps(data))
 
     return {
         'statusCode': 200,

@@ -14,6 +14,9 @@ resource "aws_s3_bucket" "bronze_bucket" {
     Name        = "Swanna Bronze Bucket"
     Environment = "Development"
   }
+
+  region = var.aws_region
+  
 }
 
 resource "aws_s3_bucket" "silver_bucket" {
@@ -23,6 +26,9 @@ resource "aws_s3_bucket" "silver_bucket" {
     Name        = "Swanna Silver Bucket"
     Environment = "Development"
   }
+
+  region = var.aws_region
+
 }
 
 resource "aws_s3_bucket" "gold_bucket" {
@@ -32,15 +38,20 @@ resource "aws_s3_bucket" "gold_bucket" {
     Name        = "Swanna Gold Bucket"
     Environment = "Development"
   }
+
+  region = var.aws_region
+
 }
 
 resource "aws_s3_bucket" "lambda-bucket" {
-  bucket = "lambda-bucket"
+  bucket = "${var.bucket_prefix}-lambda-bucket"
 
   tags = {
     Name        = "Lambda Artifacts"
     Environment = "Development"
   }
+
+  region = var.aws_region
 }
 
 # Secrets Manager

@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "bucket_prefix" {
   description = "Prefix for S3 bucket names."
-  default     = "main-swanna"
+  default     = "swanna"
 }
 
 variable "aws_access_key_id" {
