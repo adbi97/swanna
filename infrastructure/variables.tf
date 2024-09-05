@@ -25,3 +25,8 @@ variable "dynamodb_table_name" {
   description = "Name of Dynamodb table"
   default     = "terraform-lock"
 }
+
+variable "terraform_iam_user_name" {
+  description = "Terraform IAM Name"
+  default     = "tf-ic"
+}

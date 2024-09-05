@@ -1,6 +1,5 @@
-name: Bootstrap Terraform Resources
+name: Bootstrap Infrastructure
 
-# This workflow is triggered manually
 on:
   workflow_dispatch:
 
@@ -9,11 +8,27 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
 
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      TF_STATE_BUCKET_NAME: ${{ vars.terraform_state_bucket }}
+      DYNAMODB_TABLE_NAME: ${{ vars.DYNAMODB_TABLE_NAME }}
+      IAM_USER_NAME: ${{ vars.terraform_iam_user_name }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run bootstrap.sh
-        run: |
-          chmod +x infrastructure/bootstrap.sh  # Ensure script is executable
-          ./infrastructure/bootstrap.sh         # Run the script to set up S3 bucket and DynamoDB
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Make bootstrap script executable
+        run: chmod +x infrastructure/bootstrap.sh
+
+      - name: Run bootstrap script
+        run: ./infrastructure/bootstrap.sh
