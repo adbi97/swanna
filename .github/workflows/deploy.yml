@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: development
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -34,10 +34,10 @@ jobs:
 
     - name: Terraform Init
       run: terraform -chdir=infrastructure init \
-        -backend-config="bucket=${{ env.TERRAFORM_STATE_BUCKET }}" \
+        -backend-config="bucket=${{ vars.TERRAFORM_STATE_BUCKET }}" \
         -backend-config="key=terraform.tfstate" \
-        -backend-config="region=${{ env.AWS_REGION }}" \
-        -backend-config="dynamodb_table=${{ env.DYNAMODB_TABLE_NAME }}" \
+        -backend-config="region=${{ vars.AWS_REGION }}" \
+        -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" \
         -backend-config="encrypt=true"
 
     - name: Terraform Validate
@@ -58,12 +58,12 @@ jobs:
 
     - name: Upload Lambda Package to S3
       run: |
-        aws s3 cp application/lambda_function.zip s3://${{ env.BUCKET_NAME }}/lambda_function.zip \
-          --region ${{ env.AWS_REGION }}
+        aws s3 cp application/lambda_function.zip s3://${{ vars.BUCKET_NAME }}/lambda_function.zip \
+          --region ${{ vars.AWS_REGION }}
 
     - name: Deploy Lambda Function
       run: |
         aws lambda update-function-code --function-name AlphaVantageIngestion \
-          --s3-bucket ${{ env.BUCKET_NAME }} \
+          --s3-bucket ${{ vars.BUCKET_NAME }} \
           --s3-key lambda_function.zip \
-          --region ${{ env.AWS_REGION }}
+          --region ${{ vars.AWS_REGION }}
