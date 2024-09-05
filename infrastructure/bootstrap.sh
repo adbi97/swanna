@@ -34,11 +34,11 @@ else
   echo "AmazonS3FullAccess policy attached to $IAM_USER_NAME."
 fi
 
-if aws iam list-attached-user-policies --user-name "$IAM_USER_NAME" --query "AttachedPolicies[?PolicyArn=='arn:aws:iam::aws:policy/AWSDynamoDBFullAccess']" --output text | grep 'AWSDynamoDBFullAccess' >/dev/null; then
-  echo "IAM user $IAM_USER_NAME already has the AWSDynamoDBFullAccess policy attached."
+if aws iam list-attached-user-policies --user-name "$IAM_USER_NAME" --query "AttachedPolicies[?PolicyArn=='arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess']" --output text | grep 'AmazonDynamoDBFullAccess' >/dev/null; then
+  echo "IAM user $IAM_USER_NAME already has the AmazonDynamoDBFullAccess policy attached."
 else
-  aws iam attach-user-policy --user-name "$IAM_USER_NAME" --policy-arn "arn:aws:iam::aws:policy/AWSDynamoDBFullAccess" || { echo "Failed to attach AWSDynamoDBFullAccess policy to $IAM_USER_NAME"; exit 1; }
-  echo "AWSDynamoDBFullAccess policy attached to $IAM_USER_NAME."
+  aws iam attach-user-policy --user-name "$IAM_USER_NAME" --policy-arn "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess" || { echo "Failed to attach AmazonDynamoDBFullAccess policy to $IAM_USER_NAME"; exit 1; }
+  echo "AmazonDynamoDBFullAccess policy attached to $IAM_USER_NAME."
 fi
 
 # Create the S3 bucket for Terraform state
