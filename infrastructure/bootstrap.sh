@@ -48,7 +48,7 @@ else
 fi
 
 # Attach policy to IAM user
-echo "Attaching policy to IAM user..."
+echo "Attaching policies to IAM user..."
 if aws iam list-attached-user-policies --user-name "$IAM_USER_NAME" --query "AttachedPolicies[?PolicyArn=='arn:aws:iam::aws:policy/AmazonS3FullAccess']" --output text | grep 'AmazonS3FullAccess' >/dev/null; then
   echo "IAM user $IAM_USER_NAME already has the AmazonS3FullAccess policy attached."
 else
