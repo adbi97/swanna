@@ -67,7 +67,7 @@ resource "aws_lambda_function" "aapl_ingestion" {
 
   environment {
     variables = {
-      BUCKET_NAME = aws_s3_bucket.bronze_bucket.bucket
+      BUCKET_NAME = aws_s3_bucket.lambda_bucket.bucket
     }
   }
 }

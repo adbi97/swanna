@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -34,28 +34,33 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform -chdir=infrastructure init -backend-config="bucket=${{ vars.TERRAFORM_STATE_BUCKET }}" -backend-config="key=terraform.tfstate" -backend-config="region=${{ vars.AWS_REGION }}" -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" -backend-config="encrypt=true"
+        run: terraform -chdir=infrastructure init -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" -backend-config="key=terraform.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="dynamodb_table=${{ secrets.DYNAMODB_TABLE_NAME }}" -backend-config="encrypt=true"
         
       - name: Terraform Validate
         run: terraform -chdir=infrastructure validate
 
       - name: Terraform Plan
         run: terraform -chdir=infrastructure plan -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-      
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=infrastructure apply -auto-approve -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-      
+      # Step 1: Create S3 buckets
+      - name: Terraform Apply (S3 Buckets)
+        run: terraform -chdir=infrastructure apply -auto-approve -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -target=aws_s3_bucket.bronze_bucket -target=aws_s3_bucket.silver_bucket -target=aws_s3_bucket.gold_bucket -target=aws_s3_bucket.lambda_bucket
 
+      # Step 2: Upload Lambda Package to S3
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp application/lambda_function.zip s3://${{ vars.BUCKET_NAME }}/lambda_function.zip \
-            --region ${{ vars.AWS_REGION }}
+          aws s3 cp application/lambda_function.zip s3://${{ secrets.BUCKET_NAME }}/lambda_function.zip \
+            --region ${{ secrets.AWS_REGION }}
 
+      # Step 3: Deploy Lambda
       - name: Deploy Lambda Function
         run: |
           aws lambda update-function-code --function-name AlphaVantageIngestion \
-            --s3-bucket ${{ vars.BUCKET_NAME }} \
+            --s3-bucket ${{ secrets.BUCKET_NAME }} \
             --s3-key lambda_function.zip \
-            --region ${{ vars.AWS_REGION }}
+            --region ${{ secrets.AWS_REGION }}
+
+      # Step 4: Terraform Apply (Lambda)
+      - name: Terraform Apply (Lambda)
+        if: github.ref == 'refs/heads/main'
+        run: terraform -chdir=infrastructure apply -auto-approve -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
