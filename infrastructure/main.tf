@@ -6,15 +6,13 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-# Terraform Backend
+# Secrets Manager
+data "aws_secretsmanager_secret" "alpha_vantage_secret" {
+  name = "AlphaVantageAPI_Key"
+}
 
-terraform {
-  backend "s3" {
-    bucket         = var.terraform_state_bucket
-    key            = "terraform/terraform.tfstate"
-    region         = var.aws_region
-    dynamodb_table = "terraform-lock"  
-  }
+data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
+  secret_id = data.aws_secretsmanager_secret.alpha_vantage_secret.id
 }
 
 # S3 Buckets
@@ -54,14 +52,7 @@ resource "aws_s3_bucket" "lambda-bucket" {
   }
 }
 
-# Secrets Manager
-data "aws_secretsmanager_secret" "alpha_vantage_secret" {
-  name = "AlphaVantageAPI_Key"
-}
-
-data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
-  secret_id = data.aws_secretsmanager_secret.alpha_vantage_secret.id
-}
+# Lambdas 
 
 resource "aws_lambda_function" "aapl_ingestion" {
   s3_bucket        = "${var.bucket_prefix}-lambda-bucket"

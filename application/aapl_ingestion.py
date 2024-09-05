@@ -10,7 +10,7 @@ s3 = boto3.client('s3')
 
 # Initialise Variables
 bucket_name = os.getenv('BUCKET_NAME')  # Provide a default value if needed
-
+secret_name = 'AlphaVantageAPI_Key'
 
 def get_secret(secret_name):
     try:
@@ -24,8 +24,8 @@ def get_secret(secret_name):
 
 def lambda_handler(event, context):
     # Retrieve API key from Secrets Manager
-    secrets = get_secret('AlphaVantageAPI_Key')
-    api_key = secrets['AlphaVantageAPI_Key']  
+    secrets = get_secret(secret_name)
+    api_key = secrets[secret_name]  
     symbol = 'AAPL'
     function = 'TIME_SERIES_DAILY'
     

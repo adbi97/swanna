@@ -1,0 +1,19 @@
+name: Bootstrap Terraform Resources
+
+# This workflow is triggered manually
+on:
+  workflow_dispatch:
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run bootstrap.sh
+        run: |
+          chmod +x infrastructure/bootstrap.sh  # Ensure script is executable
+          ./infrastructure/bootstrap.sh         # Run the script to set up S3 bucket and DynamoDB
