@@ -34,7 +34,10 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform -chdir=infrastructure init
+        run: terraform -chdir=infrastructure init -backend-config="bucket=${{ vars.TERRAFORM_STATE_BUCKET }}" -backend-config="key=terraform.tfstate" -backend-config="region=${{ vars.AWS_REGION }}" -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" -backend-config="encrypt=true"
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Terraform Validate
         run: terraform -chdir=infrastructure validate
@@ -49,16 +52,16 @@ jobs:
       # Step 2: Upload Lambda Package to S3
       - name: Upload Lambda Package to S3
         run: |
-          aws s3 cp application/lambda_function.zip s3://${{ secrets.BUCKET_NAME }}/lambda_function.zip \
-            --region ${{ secrets.AWS_REGION }}
+          aws s3 cp application/lambda_function.zip s3://${{ vars.BUCKET_NAME }}/lambda_function.zip \
+            --region ${{ vars.AWS_REGION }}
 
       # Step 3: Deploy Lambda Function
       - name: Deploy Lambda Function
         run: |
           aws lambda update-function-code --function-name AlphaVantageIngestion \
-            --s3-bucket ${{ secrets.BUCKET_NAME }} \
+            --s3-bucket ${{ vars.BUCKET_NAME }} \
             --s3-key lambda_function.zip \
-            --region ${{ secrets.AWS_REGION }}
+            --region ${{ vars.AWS_REGION }}
 
       # Step 4: Terraform Apply (Lambda)
       - name: Terraform Apply (Lambda)
