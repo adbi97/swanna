@@ -18,7 +18,7 @@ variable "aws_secret_access_key" {
 
 variable "terraform_state_bucket" {
   description = "Name of bucket where Terraform state files are stored"
-  default     = "state-bucket-swanna"
+  default     = "adib-state-bucket-swanna"
 }
 
 variable "dynamodb_table_name" {
