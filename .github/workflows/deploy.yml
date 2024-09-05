@@ -52,9 +52,17 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
       run: |
+        terraform -chdir=infrastructure init \
+          -backend-config="bucket=state-bucket" \
+          -backend-config="key=terraform.tfstate" \
+          -backend-config="region=ap-southeast-2" \
+          -backend-config="dynamodb_table=terraform-lock" \
+          -backend-config="encrypt=true"
+    
         terraform -chdir=infrastructure apply -auto-approve \
           -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        
 
     - name: Upload Lambda Package to S3
       run: |
