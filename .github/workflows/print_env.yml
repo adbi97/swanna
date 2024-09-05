@@ -13,7 +13,7 @@ jobs:
 
     - name: Print Environment Variables
       run: |
-        echo "TERRAFORM_STATE_BUCKET=${{ vars.TERRAFORM_STATE_BUCKET }}"
-        echo "AWS_REGION=${{ vars.AWS_REGION }}"
-        echo "DYNAMODB_TABLE_NAME=${{ vars.DYNAMODB_TABLE_NAME }}"
-        echo "BUCKET_NAME=${{ vars.BUCKET_NAME }}"
+        echo "TERRAFORM_STATE_BUCKET=${{ secrets.TERRAFORM_STATE_BUCKET }}"
+        echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+        echo "DYNAMODB_TABLE_NAME=${{ secrets.DYNAMODB_TABLE_NAME }}"
+        echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}"
