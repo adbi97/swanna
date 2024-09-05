@@ -52,7 +52,7 @@ jobs:
           aws s3 cp application/lambda_function.zip s3://${{ secrets.BUCKET_NAME }}/lambda_function.zip \
             --region ${{ secrets.AWS_REGION }}
 
-      # Step 3: Deploy Lambda
+      # Step 3: Deploy Lambda Function
       - name: Deploy Lambda Function
         run: |
           aws lambda update-function-code --function-name AlphaVantageIngestion \
