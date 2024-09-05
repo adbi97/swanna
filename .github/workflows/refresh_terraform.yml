@@ -12,6 +12,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    runs-on: development
 
     steps:
       - name: Checkout code

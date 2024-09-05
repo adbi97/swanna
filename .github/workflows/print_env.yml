@@ -6,6 +6,7 @@ on:
 jobs:
   print-env:
     runs-on: ubuntu-latest
+    environment: development
 
     steps:
     - name: Checkout code
