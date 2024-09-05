@@ -15,18 +15,3 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   description = "AWS secret access key."
 }
-
-variable "terraform_state_bucket" {
-  description = "Name of bucket where Terraform state files are stored"
-  default     = "swanna-state-bucket"
-}
-
-variable "dynamodb_table_name" {
-  description = "Name of Dynamodb table"
-  default     = "terraform-lock"
-}
-
-variable "terraform_iam_user_name" {
-  description = "Terraform IAM Name"
-  default     = "tf-ic"
-}
