@@ -1,9 +1,10 @@
+# HAS TO BE HARDCODED
 terraform {
   backend "s3" {
-    bucket         = var.terraform_state_bucket
+    bucket         = "swanna-state-bucket"
     key            = "terraform.tfstate"
-    region         = var.aws_region
-    dynamodb_table = var.dynamodb_table_name
+    region         = "ap-southeast-2"
+    dynamodb_table = "terraform-lock"
     encrypt        = true
   }
 }
