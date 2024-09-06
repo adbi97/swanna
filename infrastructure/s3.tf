@@ -1,5 +1,3 @@
-
-# S3 Buckets
 resource "aws_s3_bucket" "bronze_bucket" {
   bucket = "${var.bucket_prefix}-bronze"
 
