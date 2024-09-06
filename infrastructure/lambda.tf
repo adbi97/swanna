@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "aapl_ingestion" {
-  s3_bucket        = aws_s3_bucket.lambda-bucket.bucket  # Referencing the declared lambda_bucket resource
+  s3_bucket        = aws_s3_bucket.lambda-bucket.bucket  
   s3_key           = "lambda_function.zip"
   function_name    = "AlphaVantageIngestion_AAPL"
   role             = aws_iam_role.lambda_execution_role.arn
@@ -11,7 +11,7 @@ resource "aws_lambda_function" "aapl_ingestion" {
 
   environment {
     variables = {
-      BUCKET_NAME = aws_s3_bucket.lambda_bucket.bucket
+      BUCKET_NAME = aws_s3_bucket.lambda-bucket.bucket
     }
   }
 }
