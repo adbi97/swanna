@@ -1,7 +1,6 @@
-
 resource "aws_lambda_function" "aapl_ingestion" {
-  s3_bucket        = "${var.bucket_prefix}-lambda-bucket"
-  s3_key           = "lambda_function.zip"  
+  s3_bucket        = aws_s3_bucket.lambda_bucket.bucket  # Referencing the declared lambda_bucket resource
+  s3_key           = "lambda_function.zip"
   function_name    = "AlphaVantageIngestion_AAPL"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "aapl_ingestion.lambda_handler"

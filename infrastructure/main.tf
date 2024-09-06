@@ -1,4 +1,3 @@
-# HAS TO BE HARDCODED
 terraform {
   backend "s3" {
     bucket         = "swanna-state-bucket"
@@ -22,3 +21,5 @@ data "aws_secretsmanager_secret" "alpha_vantage_secret" {
 data "aws_secretsmanager_secret_version" "alpha_vantage_secret_version" {
   secret_id = data.aws_secretsmanager_secret.alpha_vantage_secret.id
 }
+
+data "aws_caller_identity" "current" {}
