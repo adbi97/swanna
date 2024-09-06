@@ -49,19 +49,31 @@ jobs:
 
       - name: Terraform Validate
         run: terraform -chdir=infrastructure validate
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Terraform Plan
-        run: terraform -chdir=infrastructure plan -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        run: terraform -chdir=infrastructure plan
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Step 1: Create S3 buckets
       - name: Terraform Apply (S3 Buckets)
-        run: terraform -chdir=infrastructure apply -auto-approve -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -target=aws_s3_bucket.bronze_bucket -target=aws_s3_bucket.silver_bucket -target=aws_s3_bucket.gold_bucket -target=aws_s3_bucket.lambda-bucket
+        run: terraform -chdir=infrastructure apply -auto-approve -target=aws_s3_bucket.bronze_bucket -target=aws_s3_bucket.silver_bucket -target=aws_s3_bucket.gold_bucket -target=aws_s3_bucket.lambda-bucket
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Step 2: Upload Lambda Package to S3
       - name: Upload Lambda Package to S3
         run: |
           aws s3 cp application/lambda_function.zip s3://${{ vars.BUCKET_NAME }}/lambda_function.zip \
             --region ${{ vars.AWS_REGION }}
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Step 3: Deploy Lambda Function
       - name: Deploy Lambda Function
@@ -70,8 +82,14 @@ jobs:
             --s3-bucket ${{ vars.BUCKET_NAME }} \
             --s3-key lambda_function.zip \
             --region ${{ vars.AWS_REGION }}
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Step 4: Terraform Apply (Lambda)
       - name: Terraform Apply (Lambda)
         if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=infrastructure apply -auto-approve -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        run: terraform -chdir=infrastructure apply -auto-approve
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
