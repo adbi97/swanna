@@ -41,7 +41,7 @@ jobs:
             -backend-config="region=${{ vars.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" \
             -backend-config="encrypt=true" \
-            -input=false \
+            -force-copy \
             -reconfigure
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
