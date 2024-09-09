@@ -78,7 +78,7 @@ jobs:
       # Step 3: Deploy Lambda Function
       - name: Deploy Lambda Function
         run: |
-          aws lambda update-function-code --function-name AlphaVantageIngestion_AAPL \
+          aws lambda update-function-code --function-name AAPL_AlphaVantageIngestion \
             --s3-bucket ${{ vars.BUCKET_NAME }} \
             --s3-key lambda_function.zip \
             --region ${{ vars.AWS_REGION }}
